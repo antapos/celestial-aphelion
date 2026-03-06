@@ -1,27 +1,40 @@
-# Step 2.2: Test-Driven Development (TDD)
+# Step 2.3: Spring Security
 
-**Extends**: `2.1-inventory-spring-data`
+**Extends**: `2.2-inventory-tdd`
 
 ## What changed
-We introduced a strict Test-Driven Development (TDD) workflow, writing failing tests *before* writing any business logic.
-- Added `InventoryServiceTest.java` (Unit Tests) using **JUnit 5** and **Mockito** to mock our database layer.
-- Added `InventoryControllerTest.java` (Integration Tests) using Spring's `@WebMvcTest` and `MockMvc` to send simulated HTTP requests without spinning up a real web server.
-- Following the "Red-Green-Refactor" cycle, we implemented a new `purchaseItem` feature that deducts stock and throws a custom `InsufficientStockException` (HTTP 400 Bad Request) if a user tries to buy more than is available.
+We added authentication and authorization to our API using Spring Security!
+- Added `spring-boot-starter-security` to `pom.xml`.
+- Created `SecurityConfig.java` to configure our security rules:
+  - `GET` requests to `/api/inventory` are public.
+  - All other requests (like `POST` to purchase or add items) require authentication.
+  - Configured an in-memory user: `admin` with password `password`.
+  - Disabled CSRF protection to make testing with `curl` easier.
+- Updated `InventoryControllerTest.java`:
+  - Used `@WithMockUser(username = "admin", roles = {"ADMIN"})` to simulate an authenticated user for tests that require it.
+  - Added `purchaseItem_Unauthenticated_Returns401()` to explicitly test that unauthorized users format a `401 Unauthorized` response.
 
 ## How to verify
-You no longer need to manually start the server and run `curl` commands to make sure the app works. You rely on the automated test suite!
-
-1. Open a terminal in this directory.
-2. Run the test suite using the Maven wrapper:
+1. **Run the Automated Tests**: To prove that our security configurations are working and our tests are passing (including the new `401 Unauthorized` test), run the suite:
    ```bash
    ./mvnw test
    ```
-3. You should see `BUILD SUCCESS` with output indicating `Tests run: 6, Failures: 0, Errors: 0, Skipped: 0`.
+2. **Start the server (for manual testing)**:
+   ```bash
+   ./mvnw spring-boot:run
+   ```
+2. **Public Endpoint (Works!)**: Try to get all items without credentials:
+   ```bash
+   curl -s http://localhost:8080/api/inventory
+   ```
+3. **Protected Endpoint (Fails!)**: Try to purchase an item without credentials. Notice the `401 Unauthorized` response:
+   ```bash
+   curl -i -X POST "http://localhost:8080/api/inventory/ITM-001/purchase?quantity=1"
+   ```
+4. **Protected Endpoint (Success!)**: Try to purchase an item *with* credentials using the `-u` flag for HTTP Basic Auth:
+   ```bash
+   curl -i -u admin:password -X POST "http://localhost:8080/api/inventory/ITM-001/purchase?quantity=1"
+   ```
 
-## How to test more of the app
-If you want to practice TDD yourself, try adding tests for existing functionality!
-1. Open `src/test/java/com/example/springinventory/InventoryControllerTest.java`.
-2. Add a new method annotated with `@Test`.
-3. Use `mockMvc.perform(get("/api/inventory/INVALID_ID")).andExpect(status().isNotFound());`.
-4. Run the tests. They will fail (because currently, missing items return 200 OK with an empty body).
-5. Go to `InventoryController.java` and fix the logic to make the test pass!
+## Next Steps
+Now that we have a fully functional backend with a database, TDD tests, and security, it's time to build a frontend to interact with it!
