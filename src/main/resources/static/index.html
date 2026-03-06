@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Celestial Aphelion - Inventory</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+    <div id="toast-container"></div>
+
+    <header class="hero">
+        <div class="header-content">
+            <h1>Celestial Aphelion</h1>
+            <p class="subtitle">Next-Generation Inventory Management System</p>
+        </div>
+        <div class="auth-box" id="authBox">
+            <div id="loginForm" class="login-form">
+                <input type="text" id="username" placeholder="Username" autocomplete="username">
+                <input type="password" id="password" placeholder="Password" autocomplete="current-password">
+                <button onclick="app.login()">Login</button>
+            </div>
+            <div id="loggedInUser" class="logged-in-user hidden">
+                <div class="avatar">A</div>
+                <div class="user-details">
+                    <span class="welcome-text">Welcome back,</span>
+                    <span class="username-display">Admin</span>
+                </div>
+                <button class="logout-btn" onclick="app.logout()">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        
+        <div class="dashboard-stats">
+            <div class="stat-card glass focus-purple">
+                <h3 id="statTotalItems">...</h3>
+                <p>Tracked Items</p>
+            </div>
+            <div class="stat-card glass focus-blue">
+                <h3 id="statTotalValue">...</h3>
+                <p>Total Value Value</p>
+            </div>
+        </div>
+
+        <section class="inventory-section">
+            <div class="section-header">
+                <h2>Live Inventory Database</h2>
+                <button class="add-item-btn" onclick="app.refreshInventory()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M2.13 15.57a9 9 0 1 0 3.14-10.42M2.5 22v-6h6M21.87 8.43a9 9 0 1 0-3.14 10.42"/></svg>
+                    Refresh
+                </button>
+            </div>
+            
+            <!-- Items will be injected here via JavaScript -->
+            <div class="inventory-grid" id="inventoryGrid">
+                <!-- Loading State placeholder -->
+                <div class="loading-state">
+                    Connecting to secure database...
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
