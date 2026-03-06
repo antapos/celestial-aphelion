@@ -106,4 +106,4 @@ git checkout main
 ```bash
 docker compose up --build
 ```
-Open your browser to `http://localhost:8080`.
+Open your browser to `http://localhost/`. Nginx proxies `/api` requests to the backend automatically.

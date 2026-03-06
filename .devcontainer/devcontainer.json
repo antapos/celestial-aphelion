@@ -1,12 +1,24 @@
 {
-	"name": "Celestial Aphelion (Java)",
-	"image": "mcr.microsoft.com/devcontainers/java:25",
+	"name": "Celestial Aphelion (Java + Node)",
+	"image": "mcr.microsoft.com/devcontainers/base:bookworm",
+	"features": {
+		"ghcr.io/devcontainers/features/java:1": {
+			"version": "25",
+			"installMaven": "true"
+		},
+		"ghcr.io/devcontainers/features/node:1": {
+			"version": "20"
+		}
+	},
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"vscjava.vscode-java-pack"
+				"vscjava.vscode-java-pack",
+				"fwcd.kotlin",
+				"dbaeumer.vscode-eslint",
+				"esbenp.prettier-vscode"
 			]
 		}
 	},
-	"postCreateCommand": "bash -c \"source /usr/local/sdkman/bin/sdkman-init.sh && yes | sdk install java 21.0.2-tem && yes | sdk install java 25.0.2-tem\""
+	"postCreateCommand": "bash -c \"source /usr/local/sdkman/bin/sdkman-init.sh && yes | sdk install java 21.0.2-tem && yes | sdk install java 25.0.2-tem\" && cd frontend && npm install"
 }

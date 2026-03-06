@@ -1,9 +1,9 @@
 import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import vue from '@vitejs/plugin-vue'
 
-// https://vite.dev/config/
+// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [vue()],
   server: {
     proxy: {
       '/api': {
@@ -11,10 +11,5 @@ export default defineConfig({
         changeOrigin: true
       }
     }
-  },
-  test: {
-    environment: 'jsdom',
-    setupFiles: ['./src/setupTests.js'],
-    globals: true
   }
 })
