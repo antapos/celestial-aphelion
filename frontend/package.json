@@ -1,5 +1,5 @@
 {
-  "name": "3.2-inventory-frontend-vue",
+  "name": "3.3-inventory-frontend-solidjs",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -9,10 +9,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "^3.4.15"
+    "solid-js": "^1.9.3"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^5.0.3",
-    "vite": "^5.0.12"
+    "vite": "^6.0.0",
+    "vite-plugin-solid": "^2.11.0"
   }
 }
