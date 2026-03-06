@@ -1,11 +1,23 @@
 package com.example.springinventory;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+// @Entity tells Spring Data JPA that this class represents a database table.
+// @Table(name = "items") explicitly names the table.
+@Entity
+@Table(name = "items")
 public class ItemBean {
+
+    // @Id marks this field as the Primary Key in the database
+    @Id
     private String id;
     private String name;
     private int quantity;
     private double price;
 
+    // JPA requires a no-argument constructor
     public ItemBean() {
     }
 

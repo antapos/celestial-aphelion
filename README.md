@@ -1,12 +1,14 @@
-# Step 2: Inventory Spring Boot
+# Step 2.1: Inventory Spring Data JPA
 
-**Extends**: `1-inventory-simulator`
+**Extends**: `2-inventory-spring`
 
 ## What changed
-We transitioned from a manual Java console application to a modern web service using the Spring Boot framework (v3.5.0) and Spring Beans.
-- Migrated `ItemBean` into the Spring Project structure.
-- Replaced `InventorySimulator` with `InventoryService` (a Spring Bean managed via `@Service`) to handle business logic and in-memory storage.
-- Added `InventoryController` (a `@RestController`) to expose the inventory data over HTTP. 
+We replaced our list-based in-memory storage with a real embedded database (H2) and automated data access using Spring Data JPA.
+- Updated `pom.xml` to include `spring-boot-starter-data-jpa` and the `h2` database driver.
+- Configured `application.properties` to connect to the in-memory H2 database.
+- Converted `ItemBean` into a JPA `@Entity` mapped to an `items` table.
+- Created `ItemRepository` extending `JpaRepository` to automatically handle database CRUD operations without writing SQL.
+- Updated `InventoryService` to query the database via the repository instead of maintaining a local list.
 
 ## How to verify
 1. Open a terminal in this directory.
@@ -14,16 +16,18 @@ We transitioned from a manual Java console application to a modern web service u
    ```bash
    ./mvnw spring-boot:run
    ```
-3. In a separate terminal (or browser), verify the REST endpoints:
-   - Get all items:
-     ```bash
-     curl http://localhost:8080/api/inventory
-     ```
-   - Get inventory value:
-     ```bash
-     curl http://localhost:8080/api/inventory/value
-     ```
-4. Press `Ctrl+C` in the terminal running Spring Boot to stop the server.
+3. Verify that the database successfully seeded the items:
+   ```bash
+   curl http://localhost:8080/api/inventory
+   ```
+4. Verify you can insert a new item and that the total value recalculates correctly by issuing a POST request:
+   ```bash
+   curl -X POST -H "Content-Type: application/json" -d '{"id":"ITM-003","name":"Mechanical Keyboard","quantity":15,"price":120.00}' http://localhost:8080/api/inventory
+   ```
+   ```bash
+   curl http://localhost:8080/api/inventory/value
+   ```
+5. Press `Ctrl+C` in the terminal running Spring Boot to stop the server.
 
 ---
 
