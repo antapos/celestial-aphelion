@@ -1,6 +1,6 @@
 # Step 3.1: Modern React Frontend (Hybrid Architecture)
 
-**Extends**: `3-inventory-frontend-vanilla` & `2.4-advanced-java`
+**Extends**: `3-inventory-frontend-vanilla`
 
 ## What changed
 We have replaced our vanilla HTML/JS/CSS frontend with a modern React application built with Vite!
