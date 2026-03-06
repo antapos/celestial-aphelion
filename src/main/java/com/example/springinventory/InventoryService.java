@@ -26,9 +26,11 @@ public class InventoryService {
         }
     }
 
-    public List<ItemBean> getAllItems() {
-        // JPA handles the SQL SELECT query automatically
-        return itemRepository.findAll();
+    public List<ItemDTO> getAllItems() {
+        // JPA handles the SQL SELECT query automatically, then we map each to a Record
+        return itemRepository.findAll().stream()
+                .map(ItemDTO::fromEntity)
+                .toList(); // Stream.toList() is the modern Java way to collect streams!
     }
 
     public void addItem(ItemBean item) {
@@ -36,9 +38,9 @@ public class InventoryService {
         itemRepository.save(item);
     }
 
-    public Optional<ItemBean> getItemById(String id) {
+    public Optional<ItemDTO> getItemById(String id) {
         // JPA handles the SQL SELECT ... WHERE id=? query
-        return itemRepository.findById(id);
+        return itemRepository.findById(id).map(ItemDTO::fromEntity);
     }
 
     public double calculateTotalValue() {
@@ -49,15 +51,16 @@ public class InventoryService {
                 .sum();
     }
 
-    public void purchaseItem(String id, int quantityToBuy) {
-        // Find the item, or throw exception if it doesn't exist
-        ItemBean item = itemRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Item not found: " + id));
-
-        // Use our domain logic to remove stock (throws exception if not enough)
-        item.removeStock(quantityToBuy);
-
-        // Save the updated entity back to the database
-        itemRepository.save(item);
+    public PurchaseResult purchaseItem(String id, int quantityToBuy) {
+        // We use Optional mapping to handle the NotFound case elegantly
+        return itemRepository.findById(id).map(item -> {
+            try {
+                item.removeStock(quantityToBuy);
+                itemRepository.save(item);
+                return new PurchaseResult.Success(ItemDTO.fromEntity(item));
+            } catch (InsufficientStockException e) {
+                return new PurchaseResult.OutOfStock(item.getId(), item.getQuantity());
+            }
+        }).orElseGet(() -> new PurchaseResult.NotFound(id));
     }
 }
