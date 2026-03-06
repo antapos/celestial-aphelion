@@ -1,15 +1,16 @@
-# Step 3.1: Modern React Frontend (Hybrid Architecture)
+# Step 3.3: SolidJS + Kotlin (Modern Hybrid Architecture)
 
-**Extends**: `3-inventory-frontend-vanilla`
+**Extends**: `3.2-inventory-frontend-vue`
 
 ## What changed
-We have replaced our vanilla HTML/JS/CSS frontend with a modern React application built with Vite!
+We have ascended to the cutting edge of modern development:
+1. **Frontend**: Migrated to **SolidJS** for the fastest, most fine-grained reactivity without Virtual DOM overhead.
+2. **Backend**: Rewritten in **Kotlin**, providing a much more concise, safe, and expressive alternative to Java.
+3. **Runtime**: Standardized on **Java 21** for full compatibility with Kotlin 1.9.22.
 
-We have adopted a **Hybrid Sibling Architecture** where the project is split into two separate directories:
-1. `backend/`: The Spring Boot Java API server.
-2. `frontend/`: The Vite + React single-page application.
-
-This elegant structure gives us the best of both worlds: you can run the UI and API completely decoupled for rapid interface development, or you can use Maven to automatically orchestrate them together into a single, production-ready monolithic `.jar` deployment!
+We continue using our **Hybrid Sibling Architecture**:
+1. `backend/`: The Spring Boot + Kotlin API server.
+2. `frontend/`: The Vite + SolidJS single-page application.
 
 ---
 
@@ -18,9 +19,10 @@ This elegant structure gives us the best of both worlds: you can run the UI and 
 To run in development mode, you start both servers in two different terminal windows:
 
 ### 1. Start the Backend API
-In your first terminal:
+In your first terminal, ensure you are using the correct Java version (managed by SDKMAN):
 ```bash
 cd backend
+sdk env        # Switch to Java 21 as defined in .sdkmanrc
 ./mvnw spring-boot:run
 ```
 *(The backend API runs on `http://localhost:8080`)*
@@ -32,7 +34,7 @@ cd frontend
 npm install
 npm run dev
 ```
-*(The frontend runs on `http://localhost:5173`)*
+*(The frontend runs on `http://localhost:3000`)*
 
 Open your browser to `http://localhost:5173`. Vite is configured to automatically proxy `/api` requests to your running Spring Boot backend.
 
@@ -48,7 +50,7 @@ cd backend
 ```
 *(Note: The first time you run this, it will take a little longer as Maven provisions Node.js locally and runs the Vite build behind the scenes.)*
 
-Once started, open your browser to `http://localhost:8080`. You will see the beautiful React SPA loading natively from the unified Spring Boot server!
+Once started, open your browser to `http://localhost:8080`. You will see the beautiful SolidJS SPA loading natively from the unified Spring Boot server!
 
 ---
 
@@ -71,7 +73,8 @@ v2.2-inventory-tdd
 v2.3-inventory-spring-security
 v2.4-advanced-java
 v3-inventory-frontend-vanilla
-v3.1-inventory-frontend-vite-react
+v3.2-inventory-frontend-vue
+v3.3-inventory-frontend-solidjs
 ```
 
 ### Step 2: Travel back in time
