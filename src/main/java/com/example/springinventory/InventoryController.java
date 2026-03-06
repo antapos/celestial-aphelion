@@ -53,4 +53,10 @@ public class InventoryController {
                 "totalItems", inventoryService.getAllItems().size(),
                 "totalValue", inventoryService.calculateTotalValue());
     }
+
+    // Example 5: Purchase an item (The TDD implementation)
+    @PostMapping("/{id}/purchase")
+    public void purchaseItem(@PathVariable String id, @RequestParam int quantity) {
+        inventoryService.purchaseItem(id, quantity);
+    }
 }
