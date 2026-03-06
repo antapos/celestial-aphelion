@@ -1,5 +1,5 @@
 FROM eclipse-temurin:21-jdk-alpine
 WORKDIR /app
-COPY HelloWorld.java .
-RUN javac HelloWorld.java
-ENTRYPOINT ["java", "HelloWorld"]
+COPY InventorySimulator.java ItemBean.java ./
+RUN javac InventorySimulator.java ItemBean.java
+ENTRYPOINT ["java", "InventorySimulator"]
