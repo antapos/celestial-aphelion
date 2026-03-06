@@ -1,6 +1,6 @@
 {
 	"name": "Celestial Aphelion (Java)",
-	"image": "mcr.microsoft.com/devcontainers/java:21",
+	"image": "mcr.microsoft.com/devcontainers/java:25",
 	"customizations": {
 		"vscode": {
 			"extensions": [
