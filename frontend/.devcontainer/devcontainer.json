@@ -1,0 +1,13 @@
+{
+	"name": "Frontend (SolidJS)",
+	"image": "mcr.microsoft.com/devcontainers/javascript-node:20",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"esbenp.prettier-vscode",
+				"dbaeumer.vscode-eslint"
+			]
+		}
+	},
+	"postCreateCommand": "npm install"
+}

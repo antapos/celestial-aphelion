@@ -1,0 +1,14 @@
+{
+	"name": "Backend (Spring Boot)",
+	"image": "mcr.microsoft.com/devcontainers/java:25",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"vscjava.vscode-java-pack",
+				"vscjava.vscode-spring-boot",
+				"fwcd.kotlin"
+			]
+		}
+	},
+	"postCreateCommand": "bash -c \"source /usr/local/sdkman/bin/sdkman-init.sh && yes | sdk install java 21.0.2-tem\""
+}
