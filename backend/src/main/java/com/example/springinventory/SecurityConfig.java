@@ -28,11 +28,11 @@ public class SecurityConfig {
                 // tokens.
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        // Allow anyone (public access) to do GET requests to /api/inventory (viewing
-                        // items)
+                        // 1. Allow anyone to access the static frontend assets
+                        .requestMatchers("/", "/index.html", "/assets/**", "/vite.svg", "/favicon.ico").permitAll()
+                        // 2. Allow anyone (public access) to do GET requests to /api/inventory
                         .requestMatchers(HttpMethod.GET, "/api/inventory/**").permitAll()
-                        // Require authentication for ALL other requests (like POST to add or purchase
-                        // items)
+                        // 3. Require authentication for ALL other requests (POSTs, H2 console, etc.)
                         .anyRequest().authenticated())
                 // Enable HTTP Basic Authentication (sending credentials in the header)
                 .httpBasic(withDefaults());
