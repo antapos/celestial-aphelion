@@ -31,6 +31,8 @@ public class SecurityConfig {
                         // Allow anyone (public access) to do GET requests to /api/inventory (viewing
                         // items)
                         .requestMatchers(HttpMethod.GET, "/api/inventory/**").permitAll()
+                        // Allow anyone to access the static frontend files
+                        .requestMatchers("/", "/index.html", "/index.css", "/app.js").permitAll()
                         // Require authentication for ALL other requests (like POST to add or purchase
                         // items)
                         .anyRequest().authenticated())
