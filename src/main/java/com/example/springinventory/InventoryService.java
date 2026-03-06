@@ -48,4 +48,16 @@ public class InventoryService {
                 .mapToDouble(item -> item.getPrice() * item.getQuantity())
                 .sum();
     }
+
+    public void purchaseItem(String id, int quantityToBuy) {
+        // Find the item, or throw exception if it doesn't exist
+        ItemBean item = itemRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Item not found: " + id));
+
+        // Use our domain logic to remove stock (throws exception if not enough)
+        item.removeStock(quantityToBuy);
+
+        // Save the updated entity back to the database
+        itemRepository.save(item);
+    }
 }

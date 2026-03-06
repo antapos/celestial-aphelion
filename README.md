@@ -1,30 +1,27 @@
-# Step 2.1: Inventory Spring Data JPA
+# Step 2.2: Test-Driven Development (TDD)
 
-**Extends**: `2-inventory-spring`
+**Extends**: `2.1-inventory-spring-data`
 
 ## What changed
-We replaced our list-based in-memory storage with a real embedded database (H2) and automated data access using Spring Data JPA.
-- Updated `pom.xml` to include `spring-boot-starter-data-jpa` and the `h2` database driver.
-- Configured `application.properties` to connect to the in-memory H2 database.
-- Converted `ItemBean` into a JPA `@Entity` mapped to an `items` table.
-- Created `ItemRepository` extending `JpaRepository` to automatically handle database CRUD operations without writing SQL.
-- Updated `InventoryService` to query the database via the repository instead of maintaining a local list.
+We introduced a strict Test-Driven Development (TDD) workflow, writing failing tests *before* writing any business logic.
+- Added `InventoryServiceTest.java` (Unit Tests) using **JUnit 5** and **Mockito** to mock our database layer.
+- Added `InventoryControllerTest.java` (Integration Tests) using Spring's `@WebMvcTest` and `MockMvc` to send simulated HTTP requests without spinning up a real web server.
+- Following the "Red-Green-Refactor" cycle, we implemented a new `purchaseItem` feature that deducts stock and throws a custom `InsufficientStockException` (HTTP 400 Bad Request) if a user tries to buy more than is available.
 
 ## How to verify
+You no longer need to manually start the server and run `curl` commands to make sure the app works. You rely on the automated test suite!
+
 1. Open a terminal in this directory.
-2. Start the Spring Boot server using the Maven wrapper:
+2. Run the test suite using the Maven wrapper:
    ```bash
-   ./mvnw spring-boot:run
+   ./mvnw test
    ```
-3. Verify that the database successfully seeded the items:
-   ```bash
-   curl http://localhost:8080/api/inventory
-   ```
-4. Verify you can insert a new item and that the total value recalculates correctly by issuing a POST request:
-   ```bash
-   curl -X POST -H "Content-Type: application/json" -d '{"id":"ITM-003","name":"Mechanical Keyboard","quantity":15,"price":120.00}' http://localhost:8080/api/inventory
-   ```
-   ```bash
-   curl http://localhost:8080/api/inventory/value
-   ```
-5. Press `Ctrl+C` in the terminal running Spring Boot to stop the server.
+3. You should see `BUILD SUCCESS` with output indicating `Tests run: 6, Failures: 0, Errors: 0, Skipped: 0`.
+
+## How to test more of the app
+If you want to practice TDD yourself, try adding tests for existing functionality!
+1. Open `src/test/java/com/example/springinventory/InventoryControllerTest.java`.
+2. Add a new method annotated with `@Test`.
+3. Use `mockMvc.perform(get("/api/inventory/INVALID_ID")).andExpect(status().isNotFound());`.
+4. Run the tests. They will fail (because currently, missing items return 200 OK with an empty body).
+5. Go to `InventoryController.java` and fix the logic to make the test pass!

@@ -59,4 +59,12 @@ public class ItemBean {
     public void setPrice(double price) {
         this.price = price;
     }
+
+    // Business Logic Method
+    public void removeStock(int amount) {
+        if (this.quantity < amount) {
+            throw new InsufficientStockException("Not enough stock for item: " + this.name);
+        }
+        this.quantity -= amount;
+    }
 }
