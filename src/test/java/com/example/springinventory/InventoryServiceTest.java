@@ -36,46 +36,42 @@ public class InventoryServiceTest {
     }
 
     @Test
-    public void purchaseItem_WithSufficientStock_ReducesQuantity() {
-        // Arrange: Teach our mock database to return our test item when asked for
-        // "ITM-T1"
+    public void purchaseItem_WithSufficientStock_ReturnsSuccess() {
+        // Arrange
         when(itemRepository.findById("ITM-T1")).thenReturn(Optional.of(testItem));
 
-        // Act: Perform the action we are testing
-        inventoryService.purchaseItem("ITM-T1", 3);
+        // Act
+        PurchaseResult result = inventoryService.purchaseItem("ITM-T1", 3);
 
-        // Assert: Verify the results
+        // Assert
+        assertEquals(PurchaseResult.Success.class, result.getClass());
         assertEquals(7, testItem.getQuantity(), "Quantity should be reduced by 3");
-
-        // Verify we also saved the updated item back to the database
         verify(itemRepository, times(1)).save(testItem);
     }
 
     @Test
-    public void purchaseItem_WithInsufficientStock_ThrowsException() {
+    public void purchaseItem_WithInsufficientStock_ReturnsOutOfStock() {
         // Arrange
         when(itemRepository.findById("ITM-T1")).thenReturn(Optional.of(testItem));
 
-        // Act & Assert: Verify that asking for 15 (we only have 10) throws an error
-        assertThrows(InsufficientStockException.class, () -> {
-            inventoryService.purchaseItem("ITM-T1", 15);
-        });
+        // Act
+        PurchaseResult result = inventoryService.purchaseItem("ITM-T1", 15);
 
-        // Verify we NEVER tried to save the testItem to the database
+        // Assert
+        assertEquals(PurchaseResult.OutOfStock.class, result.getClass());
         verify(itemRepository, never()).save(testItem);
-
-        // Double check the quantity wasn't altered
         assertEquals(10, testItem.getQuantity(), "Quantity should remain unchanged");
     }
 
     @Test
-    public void purchaseItem_ItemNotFound_ThrowsException() {
+    public void purchaseItem_ItemNotFound_ReturnsNotFound() {
         // Arrange
         when(itemRepository.findById("INVALID")).thenReturn(Optional.empty());
 
-        // Act & Assert
-        assertThrows(IllegalArgumentException.class, () -> {
-            inventoryService.purchaseItem("INVALID", 1);
-        });
+        // Act
+        PurchaseResult result = inventoryService.purchaseItem("INVALID", 1);
+
+        // Assert
+        assertEquals(PurchaseResult.NotFound.class, result.getClass());
     }
 }

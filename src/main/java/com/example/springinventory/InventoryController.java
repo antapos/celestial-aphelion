@@ -1,6 +1,7 @@
 package com.example.springinventory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,23 +28,23 @@ public class InventoryController {
 
     // Example 1: GET all items
     @GetMapping
-    public List<ItemBean> getAllItems() {
+    public List<ItemDTO> getAllItems() {
         return inventoryService.getAllItems();
     }
 
     // Example 2: GET a specific item (e.g., /api/inventory/ITM-001)
     @GetMapping("/{id}")
-    public ItemBean getItem(@PathVariable String id) {
-        Optional<ItemBean> item = inventoryService.getItemById(id);
+    public ItemDTO getItem(@PathVariable String id) {
+        Optional<ItemDTO> item = inventoryService.getItemById(id);
         return item.orElse(null); // Spring automatically converts null to a 404 (in proper setups) or an empty
                                   // body
     }
 
     // Example 3: POST a new item (Spring automatically maps JSON to our ItemBean)
     @PostMapping
-    public ItemBean addItem(@RequestBody ItemBean newItem) {
+    public ItemDTO addItem(@RequestBody ItemBean newItem) {
         inventoryService.addItem(newItem);
-        return newItem;
+        return ItemDTO.fromEntity(newItem);
     }
 
     // Example 4: A custom endpoint to get calculated values
@@ -54,9 +55,19 @@ public class InventoryController {
                 "totalValue", inventoryService.calculateTotalValue());
     }
 
-    // Example 5: Purchase an item (The TDD implementation)
+    // Example 5: Purchase an item using Java 21+ Pattern Matching and Java 22+
+    // Unnamed Variables
     @PostMapping("/{id}/purchase")
-    public void purchaseItem(@PathVariable String id, @RequestParam int quantity) {
-        inventoryService.purchaseItem(id, quantity);
+    public ResponseEntity<?> purchaseItem(@PathVariable String id, @RequestParam int quantity) {
+        PurchaseResult result = inventoryService.purchaseItem(id, quantity);
+
+        // Look at this absolutely beautiful modern Java switch expression!
+        // No casting needed, and we return standard HTTP status codes instantly.
+        return switch (result) {
+            case PurchaseResult.Success(ItemDTO item) -> ResponseEntity.ok(item);
+            case PurchaseResult.NotFound(_) -> ResponseEntity.notFound().build();
+            case PurchaseResult.OutOfStock(String _, int available) -> ResponseEntity.badRequest()
+                    .body("Only " + available + " items left in stock!");
+        };
     }
 }

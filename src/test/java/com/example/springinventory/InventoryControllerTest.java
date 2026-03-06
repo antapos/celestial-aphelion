@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -35,30 +36,30 @@ public class InventoryControllerTest {
     @Test
     @WithMockUser(username = "admin", roles = { "ADMIN" })
     public void purchaseItem_Success_Returns200() throws Exception {
-        // We simulate a user sending a POST to /api/inventory/ITM-001/purchase with
-        // quantity=2
+        // Arrange: We must tell the mock service to return a Success record now
+        ItemDTO mockDTO = new ItemDTO("ITM-001", "Mock Laptop", 8, 1500.0);
+        when(inventoryService.purchaseItem("ITM-001", 2)).thenReturn(new PurchaseResult.Success(mockDTO));
+
+        // Act & Assert
         mockMvc.perform(post("/api/inventory/ITM-001/purchase")
                 .param("quantity", "2")
                 .with(csrf()))
                 .andExpect(status().isOk());
-
-        // Verify the controller actually called our service
-        verify(inventoryService).purchaseItem("ITM-001", 2);
     }
 
     @Test
     @WithMockUser(username = "admin", roles = { "ADMIN" })
     public void purchaseItem_InsufficientStock_Returns400() throws Exception {
-        // We tell our mock service: When someone tries to buy 100 of ITM-001, throw
-        // this error!
-        doThrow(new InsufficientStockException("Not enough stock available"))
-                .when(inventoryService).purchaseItem(eq("ITM-001"), anyInt());
+        // Arrange: Return the OutOfStock record instead of throwing an exception
+        when(inventoryService.purchaseItem("ITM-001", 100))
+                .thenReturn(new PurchaseResult.OutOfStock("ITM-001", 10));
 
-        // Now, we send the HTTP request and expect a HTTP 400 Bad Request
+        // Act & Assert
         mockMvc.perform(post("/api/inventory/ITM-001/purchase")
                 .param("quantity", "100")
                 .with(csrf()))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("Only 10 items left in stock!"));
     }
 
     @Test
