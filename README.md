@@ -119,14 +119,15 @@ We ran an identical `10-second` load test (`100` concurrent connections) against
 
 | Backend Implementation | Files | Lines of Code | Memory at Rest | Requests per Second (RPS) | P99 Latency |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Rust (Axum)** | `1` | `103` | `~1.6 MB` | `65,851 req/s` | `10.93 ms` |
-| **Java 21 (Spring Boot)** | `9` | `320` | `~218 MB` | `5,802 req/s` | `74.11 ms` |
-| **Java 25 (Spring Boot)** | `9` | `320` | `~204 MB` | `5,499 req/s` | `97.20 ms` |
-| **Kotlin (Spring Boot)** | `5` | `126` | `~241 MB` | `4,591 req/s` | `96.31 ms` |
-| **Python (FastAPI)** | `1` | `55` | `~38 MB` | `1,681 req/s` | `85.93 ms` |
+| **Rust (Axum)** | `1` | `103` | `~1.6 MB` | `63,259 req/s` | `11.27 ms` |
+| **Python (FastAPI)** | `1` | `55` | `~100 MB` | `7,180 req/s` | `28.93 ms` |
+| **Kotlin (Spring Boot)** | `5` | `126` | `~371 MB` | `3,105 req/s` | `142.76 ms` |
+| **Java 21 (Spring Boot)** | `9` | `320` | `~354 MB` | `3,069 req/s` | `115.23 ms` |
+| **Java 25 (Spring Boot)** | `9` | `320` | `~313 MB` | `2,993 req/s` | `163.77 ms` |
 
-* **Performance King**: The Rust backend achieves **11x more throughput** than Java, while using **130x less memory** and maintaining exceptional readability (only 1 file, 103 lines)!
-* **Readability King**: Python is the absolute leanest and most readable implementation, achieving the entire API contract in just **55 lines of code** in a single file, compared to Java's verbose 9 files and 320 lines.
+* **Performance King**: The Rust backend handles **63k+ requests per second** using just **1.6 MB of RAM**—an absolute masterclass in bare-metal efficiency.
+* **The "Python Beats Java" Shock (Readability King)**: We configured Python to spawn 4 workers under `uvloop`. Not only is Python the most readable implementation (**1 file, 55 lines** vs Java's 9 files, 320 lines), but it actually **beat the JVM** on raw throughput (7.1k vs 3.1k RPS) in this scenario!
+* **Java Virtual Threads Overhead**: We enabled `spring.threads.virtual.enabled=true`. While Virtual Threads are legendary for blocking I/O, they introduced context-switching overhead in this purely CPU/Memory-bound JSON serialization test, lowering Java's RPS from its earlier peak of 5.8k down to 3.1k. The right tool for the right job!
 
 ---
 

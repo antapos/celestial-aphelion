@@ -87,21 +87,21 @@ echo "Pre-compiling Rust backend in release mode..."
 cd backend-rust && cargo build --release
 cd ..
 
-# Pre-compile Kotlin backend on Java 21
+# Pre-compile Kotlin backend
 echo "Pre-compiling Kotlin backend..."
-cd backend-kotlin && JAVA_HOME="$JAVA_21_HOME" ./mvnw clean compile -DskipTests
+cd backend-kotlin && JAVA_HOME="$JAVA_21_HOME" ./mvnw clean package -DskipTests
 cd ..
 
-# Pre-compile Java backend on Java 21
+# Pre-compile Java backend
 echo "Pre-compiling Java backend (baseline)..."
-cd backend-java && JAVA_HOME="$JAVA_21_HOME" ./mvnw clean compile -DskipTests
+cd backend-java && JAVA_HOME="$JAVA_21_HOME" ./mvnw clean package -DskipTests
 cd ..
 
 # Run Benchmarks
-run_benchmark "Kotlin-SpringBoot" "backend-kotlin" "JAVA_HOME="$JAVA_21_HOME" ./mvnw spring-boot:run"
-run_benchmark "Java-SpringBoot-21" "backend-java" "JAVA_HOME="$JAVA_21_HOME" ./mvnw spring-boot:run"
-run_benchmark "Java-SpringBoot-25" "backend-java" "JAVA_HOME="$JAVA_25_HOME" ./mvnw spring-boot:run"
-run_benchmark "Python-FastAPI" "backend-python" "uv run uvicorn main:app --port 8080"
+run_benchmark "Kotlin-SpringBoot" "backend-kotlin" "JAVA_HOME="$JAVA_21_HOME" java -Xms200m -Xmx1g -jar target/spring-inventory-0.0.1-SNAPSHOT.jar"
+run_benchmark "Java-SpringBoot-21" "backend-java" "JAVA_HOME="$JAVA_21_HOME" java -Xms200m -Xmx1g -jar target/spring-inventory-0.0.1-SNAPSHOT.jar"
+run_benchmark "Java-SpringBoot-25" "backend-java" "JAVA_HOME="$JAVA_25_HOME" java -Xms200m -Xmx1g -jar target/spring-inventory-0.0.1-SNAPSHOT.jar"
+run_benchmark "Python-FastAPI" "backend-python" "uv run uvicorn main:app --port 8080 --workers 4 --loop uvloop"
 run_benchmark "Rust-Axum" "backend-rust" "cargo run --release"
 
 echo "All benchmarks complete! See benchmarks/ directory for results."
