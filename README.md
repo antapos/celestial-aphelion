@@ -1,20 +1,21 @@
-# Step 5.0: The Tri-Glot Backend Architecture (Rust/Python/Kotlin)
+# Step 5.1: The Tri-Glot Backend Architecture & Benchmarks
 
 **Extends**: `4.0-inventory-python-solidjs`
 
 ## What changed
-We have added a third backend implementation: **Rust**, completing our Tri-Glot architecture!
+We have expanded our Polyglot architecture to include **Rust** and revived the legacy **Java** implementation for benchmarking comparisons!
 1. **Rust Backend (`backend-rust/`)**: Implemented a type-safe, hyper-performant Rust backend utilizing `axum` and `tokio`. We used our E2E black-box safety net to prove it perfectly replicates our business logic.
-2. **Testing Parity**: The SolidJS frontend and the E2E test suite interact with the Kotlin, Python, and Rust servers with absolutely zero changes required.
-3. **OpenAPI Contract**: All backends adhere strictly to `contracts/openapi.yaml`.
+2. **Legacy Java Backend (`backend-java/`)**: We extracted the exact standard Java codebase from `v2.4-advanced-java`.
+3. **OpenAPI Contract**: All backends (Kotlin, Java, Python, Rust) adhere strictly to `contracts/openapi.yaml`.
 
 We are now running a Tri-Glot Architecture:
-1. `backend/`: The legacy Spring Boot + Kotlin API server.
-2. `backend-python/`: The bleeding-edge Python FastAPI server.
-3. `backend-rust/`: The hyper-performant Rust Axum server.
-4. `frontend/`: The Vite + SolidJS UI.
-5. `e2e-tests/`: The universal safety net.
-6. `contracts/`: The OpenAPI Specification defining the exact API rules.
+1. `backend-kotlin/`: The modern Spring Boot + Kotlin API server.
+2. `backend-java/`: The legacy pure Java API server.
+3. `backend-python/`: The bleeding-edge Python FastAPI server.
+4. `backend-rust/`: The hyper-performant Rust Axum server.
+5. `frontend/`: The Vite + SolidJS UI.
+6. `e2e-tests/`: The universal safety net.
+7. `contracts/`: The OpenAPI Specification defining the exact API rules.
 
 ---
 
@@ -82,12 +83,12 @@ The frontend will work perfectly by talking to the mock server!
 
 ## 🏃 Method 4: The Legacy Kotlin Backend
 
-If you prefer to run the Spring Boot Kotlin backend, you can!
+If you prefer to run the modern Spring Boot Kotlin backend, you can!
 
 ### 1. Start the Kotlin Backend API
 Ensure you are using Java 21:
 ```bash
-cd backend
+cd backend-kotlin
 sdk env        # Switch to Java 21 as defined in .sdkmanrc
 ./mvnw spring-boot:run
 ```
@@ -116,13 +117,16 @@ You should see all tests pass with flying colors, proving contract parity!
 ## 🏎️ Performance Benchmarks
 We ran an identical `10-second` load test (`100` concurrent connections) against each implementation.
 
-| Backend Implementation | Memory at Rest | Requests per Second (RPS) | Avg Latency | P99 Latency |
-| :--- | :--- | :--- | :--- | :--- |
-| **Kotlin (Spring Boot)** | `~239 MB` | `4,366 req/s` | `22.91 ms` | `98.89 ms` |
-| **Python (FastAPI)** | `~38 MB` | `1,641 req/s` | `61.05 ms` | `94.85 ms` |
-| **Rust (Axum)** | `~1.6 MB` | `53,365 req/s` | `1.86 ms` | `17.45 ms` |
+| Backend Implementation | Files | Lines of Code | Memory at Rest | Requests per Second (RPS) | P99 Latency |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Rust (Axum)** | `1` | `103` | `~1.6 MB` | `65,851 req/s` | `10.93 ms` |
+| **Java 21 (Spring Boot)** | `9` | `320` | `~218 MB` | `5,802 req/s` | `74.11 ms` |
+| **Java 25 (Spring Boot)** | `9` | `320` | `~204 MB` | `5,499 req/s` | `97.20 ms` |
+| **Kotlin (Spring Boot)** | `5` | `126` | `~241 MB` | `4,591 req/s` | `96.31 ms` |
+| **Python (FastAPI)** | `1` | `55` | `~38 MB` | `1,681 req/s` | `85.93 ms` |
 
-*The Rust backend achieves **12x more throughput** than Kotlin, while using **140x less memory**!*
+* **Performance King**: The Rust backend achieves **11x more throughput** than Java, while using **130x less memory** and maintaining exceptional readability (only 1 file, 103 lines)!
+* **Readability King**: Python is the absolute leanest and most readable implementation, achieving the entire API contract in just **55 lines of code** in a single file, compared to Java's verbose 9 files and 320 lines.
 
 ---
 
@@ -192,6 +196,11 @@ docker compose --profile python up --build
 ```
 
 To run the frontend coupled to the **Kotlin Spring Boot** backend:
+```bash
+docker compose --profile kotlin up --build
+```
+
+To run the frontend coupled to the benchmark **Java Spring Boot** backend:
 ```bash
 docker compose --profile java up --build
 ```

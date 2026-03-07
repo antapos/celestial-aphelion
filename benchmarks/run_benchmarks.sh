@@ -87,13 +87,20 @@ echo "Pre-compiling Rust backend in release mode..."
 cd backend-rust && cargo build --release
 cd ..
 
-# Make sure maven is downloaded and ready for kotlin
+# Pre-compile Kotlin backend on Java 21
 echo "Pre-compiling Kotlin backend..."
-cd backend && JAVA_HOME=~/.sdkman/candidates/java/21.0.2-tem ./mvnw clean compile -DskipTests
+cd backend-kotlin && JAVA_HOME="$JAVA_21_HOME" ./mvnw clean compile -DskipTests
+cd ..
+
+# Pre-compile Java backend on Java 21
+echo "Pre-compiling Java backend (baseline)..."
+cd backend-java && JAVA_HOME="$JAVA_21_HOME" ./mvnw clean compile -DskipTests
 cd ..
 
 # Run Benchmarks
-run_benchmark "Kotlin-SpringBoot" "backend" "JAVA_HOME=~/.sdkman/candidates/java/21.0.2-tem ./mvnw spring-boot:run"
+run_benchmark "Kotlin-SpringBoot" "backend-kotlin" "JAVA_HOME="$JAVA_21_HOME" ./mvnw spring-boot:run"
+run_benchmark "Java-SpringBoot-21" "backend-java" "JAVA_HOME="$JAVA_21_HOME" ./mvnw spring-boot:run"
+run_benchmark "Java-SpringBoot-25" "backend-java" "JAVA_HOME="$JAVA_25_HOME" ./mvnw spring-boot:run"
 run_benchmark "Python-FastAPI" "backend-python" "uv run uvicorn main:app --port 8080"
 run_benchmark "Rust-Axum" "backend-rust" "cargo run --release"
 

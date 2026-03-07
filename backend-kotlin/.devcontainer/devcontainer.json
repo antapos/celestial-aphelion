@@ -1,5 +1,5 @@
 {
-	"name": "Backend (Spring Boot)",
+	"name": "Backend Kotlin (Spring Boot)",
 	"image": "mcr.microsoft.com/devcontainers/java:21",
 	"customizations": {
 		"vscode": {

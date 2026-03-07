@@ -1,7 +1,19 @@
 services:
   backend-java:
-    build: ./backend
+    build: ./backend-java
     profiles: ["java"]
+    expose:
+      - "8080"
+    networks:
+      default:
+        aliases:
+          - backend
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+
+  backend-kotlin:
+    build: ./backend-kotlin
+    profiles: ["kotlin"]
     expose:
       - "8080"
     networks:
