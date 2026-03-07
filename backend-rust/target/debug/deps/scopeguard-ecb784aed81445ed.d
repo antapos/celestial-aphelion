@@ -1,0 +1,7 @@
+/Users/antonis/.gemini/antigravity/playground/celestial-aphelion/backend-rust/target/debug/deps/scopeguard-ecb784aed81445ed.d: /Users/antonis/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/scopeguard-1.2.0/src/lib.rs
+
+/Users/antonis/.gemini/antigravity/playground/celestial-aphelion/backend-rust/target/debug/deps/libscopeguard-ecb784aed81445ed.rlib: /Users/antonis/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/scopeguard-1.2.0/src/lib.rs
+
+/Users/antonis/.gemini/antigravity/playground/celestial-aphelion/backend-rust/target/debug/deps/libscopeguard-ecb784aed81445ed.rmeta: /Users/antonis/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/scopeguard-1.2.0/src/lib.rs
+
+/Users/antonis/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/scopeguard-1.2.0/src/lib.rs:
