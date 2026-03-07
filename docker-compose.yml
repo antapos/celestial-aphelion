@@ -1,10 +1,25 @@
 services:
-  backend:
+  backend-java:
     build: ./backend
+    profiles: ["java"]
     expose:
       - "8080"
+    networks:
+      default:
+        aliases:
+          - backend
     environment:
       - SPRING_PROFILES_ACTIVE=dev
+
+  backend-python:
+    build: ./backend-python
+    profiles: ["python"]
+    expose:
+      - "8080"
+    networks:
+      default:
+        aliases:
+          - backend
 
   frontend:
     build: ./frontend

@@ -1,0 +1,115 @@
+openapi: 3.0.3
+info:
+  title: Celestial Aphelion Inventory API
+  description: The REST API for managing inventory items and processing purchases in the Celestial Aphelion system.
+  version: 1.0.0
+servers:
+  - url: "http://localhost:8080"
+    description: Local Development Server
+
+paths:
+  /api/inventory:
+    get:
+      summary: Get all inventory items
+      description: Retrieves a complete list of all items currently tracked in the inventory database.
+      operationId: getInventory
+      responses:
+        '200':
+          description: A JSON array of inventory items.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Item'
+              example:
+                - id: "ITM-001"
+                  name: "High-End Laptop"
+                  quantity: 10
+                  price: 1500.00
+                - id: "ITM-002"
+                  name: "Wireless Mouse"
+                  quantity: 50
+                  price: 25.50
+
+  /api/inventory/{item_id}/purchase:
+    post:
+      summary: Purchase an item
+      description: Processes a purchase for a specified quantity of a particular item. Reduces the tracked stock quantity.
+      operationId: purchaseItem
+      security:
+        - basicAuth: []
+      parameters:
+        - name: item_id
+          in: path
+          required: true
+          description: The unique identifier of the item to purchase.
+          schema:
+            type: string
+            example: "ITM-001"
+        - name: quantity
+          in: query
+          required: true
+          description: The number of units to purchase.
+          schema:
+            type: integer
+            minimum: 1
+            example: 2
+      responses:
+        '200':
+          description: Purchase successful. The item stock has been reduced.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Purchase successful"
+        '400':
+          description: Bad request. Most commonly due to insufficient stock or invalid quantity.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Insufficient stock"
+        '401':
+          description: Unauthorized. Invalid or missing Basic Authentication credentials.
+        '404':
+          description: Not found. The requested item ID does not exist in the database.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Item not found"
+
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+  schemas:
+    Item:
+      type: object
+      required:
+        - id
+        - name
+        - quantity
+        - price
+      properties:
+        id:
+          type: string
+          description: Unique internal tracking ID for the item.
+          example: "ITM-001"
+        name:
+          type: string
+          description: The human-readable name of the item.
+          example: "High-End Laptop"
+        quantity:
+          type: integer
+          description: The current number of units available in stock.
+          minimum: 0
+          example: 10
+        price:
+          type: number
+          format: float
+          description: The unit price in USD.
+          minimum: 0.0
+          example: 1500.00

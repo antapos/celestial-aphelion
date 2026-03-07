@@ -1,0 +1,13 @@
+{
+	"name": "Backend Python (FastAPI)",
+	"image": "mcr.microsoft.com/devcontainers/python:3.12",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-python.python",
+				"ms-python.vscode-pylance"
+			]
+		}
+	},
+	"postCreateCommand": "bash -c \"source /usr/local/sdkman/bin/sdkman-init.sh && yes | sdk install java 21.0.2-tem && yes | sdk install java 25.0.2-tem\" && sudo curl -LsSf https://astral.sh/uv/install.sh | sudo env UV_INSTALL_DIR=\"/usr/local/bin\" sh && uv sync"
+}

@@ -1,5 +1,5 @@
 {
-	"name": "Celestial Aphelion (Java + Node)",
+	"name": "Celestial Aphelion (Java + Node + Python)",
 	"image": "mcr.microsoft.com/devcontainers/base:bookworm",
 	"features": {
 		"ghcr.io/devcontainers/features/java:1": {
@@ -8,6 +8,9 @@
 		},
 		"ghcr.io/devcontainers/features/node:1": {
 			"version": "20"
+		},
+		"ghcr.io/devcontainers/features/python:1": {
+			"version": "3.12"
 		}
 	},
 	"customizations": {
@@ -16,9 +19,11 @@
 				"vscjava.vscode-java-pack",
 				"fwcd.kotlin",
 				"dbaeumer.vscode-eslint",
-				"esbenp.prettier-vscode"
+				"esbenp.prettier-vscode",
+				"ms-python.python",
+				"ms-python.vscode-pylance"
 			]
 		}
 	},
-	"postCreateCommand": "bash -c \"source /usr/local/sdkman/bin/sdkman-init.sh && yes | sdk install java 21.0.2-tem && yes | sdk install java 25.0.2-tem\" && cd frontend && npm install"
+	"postCreateCommand": "bash -c \"source /usr/local/sdkman/bin/sdkman-init.sh && yes | sdk install java 21.0.2-tem && yes | sdk install java 25.0.2-tem\" && sudo curl -LsSf https://astral.sh/uv/install.sh | sudo env UV_INSTALL_DIR=\"/usr/local/bin\" sh && cd frontend && npm install && cd ../backend-python && uv sync --no-dev"
 }
