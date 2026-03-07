@@ -1,5 +1,5 @@
 {
-	"name": "Celestial Aphelion (Java + Node + Python)",
+	"name": "Celestial Aphelion (Full Stack Hub)",
 	"image": "mcr.microsoft.com/devcontainers/base:bookworm",
 	"features": {
 		"ghcr.io/devcontainers/features/java:1": {
@@ -11,19 +11,25 @@
 		},
 		"ghcr.io/devcontainers/features/python:1": {
 			"version": "3.12"
+		},
+		"ghcr.io/devcontainers/features/rust:1": {
+			"version": "latest",
+			"profile": "minimal"
 		}
 	},
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"vscjava.vscode-java-pack",
-				"fwcd.kotlin",
-				"dbaeumer.vscode-eslint",
-				"esbenp.prettier-vscode",
+				"rust-lang.rust-analyzer",
+				"tamasfe.even-better-toml",
 				"ms-python.python",
-				"ms-python.vscode-pylance"
+				"ms-python.vscode-pylance",
+				"fwcd.kotlin",
+				"vscjava.vscode-java-pack",
+				"dbaeumer.vscode-eslint",
+				"esbenp.prettier-vscode"
 			]
 		}
 	},
-	"postCreateCommand": "bash -c \"source /usr/local/sdkman/bin/sdkman-init.sh && yes | sdk install java 21.0.2-tem && yes | sdk install java 25.0.2-tem\" && sudo curl -LsSf https://astral.sh/uv/install.sh | sudo env UV_INSTALL_DIR=\"/usr/local/bin\" sh && cd frontend && npm install && cd ../backend-python && uv sync --no-dev"
+	"postCreateCommand": "bash -c \"source /usr/local/sdkman/bin/sdkman-init.sh && yes | sdk install java 21.0.2-tem && yes | sdk install java 25.0.2-tem\" && sudo curl -LsSf https://astral.sh/uv/install.sh | sudo env UV_INSTALL_DIR=\"/usr/local/bin\" sh && cd frontend && npm install && cd ../backend-python && uv sync --no-dev && sudo curl -L https://github.com/hatoo/oha/releases/download/v1.14.0/oha-linux-amd64 -o /usr/local/bin/oha && sudo chmod +x /usr/local/bin/oha"
 }

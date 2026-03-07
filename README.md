@@ -1,30 +1,43 @@
-# Step 4.0: Python FastAPI Backend Migration (Polyglot Era)
+# Step 5.0: The Tri-Glot Backend Architecture (Rust/Python/Kotlin)
 
-**Extends**: `3.3-inventory-frontend-solidjs`
+**Extends**: `4.0-inventory-python-solidjs`
 
 ## What changed
-We have established a state-of-the-art "Black-Box Testing" safety net and successfully migrated our backend to **Python**:
-1. **Testing Safety Net (`e2e-tests/`)**: Created a language-agnostic functional testing suite using `pytest` and `requests`. This proves that our new backend produces the exact same HTTP responses as our Kotlin baseline.
-2. **Python Backend (`backend-python/`)**: Implemented a blazing fast replacement backend using **Python**, **FastAPI**, and **uvicorn**. This project is managed using `uv`, the modern lightning-fast Python package and project manager.
-3. **Frontend**: Remains the exact same untouched **SolidJS** SPA, completely unaware that it is now talking to a Python server!
+We have added a third backend implementation: **Rust**, completing our Tri-Glot architecture!
+1. **Rust Backend (`backend-rust/`)**: Implemented a type-safe, hyper-performant Rust backend utilizing `axum` and `tokio`. We used our E2E black-box safety net to prove it perfectly replicates our business logic.
+2. **Testing Parity**: The SolidJS frontend and the E2E test suite interact with the Kotlin, Python, and Rust servers with absolutely zero changes required.
+3. **OpenAPI Contract**: All backends adhere strictly to `contracts/openapi.yaml`.
 
-We are now running a Polyglot Architecture:
+We are now running a Tri-Glot Architecture:
 1. `backend/`: The legacy Spring Boot + Kotlin API server.
 2. `backend-python/`: The bleeding-edge Python FastAPI server.
-3. `frontend/`: The Vite + SolidJS UI.
-4. `e2e-tests/`: The universal safety net.
-5. `contracts/`: The OpenAPI Specification defining the exact API rules.
+3. `backend-rust/`: The hyper-performant Rust Axum server.
+4. `frontend/`: The Vite + SolidJS UI.
+5. `e2e-tests/`: The universal safety net.
+6. `contracts/`: The OpenAPI Specification defining the exact API rules.
 
 ---
 
 ---
 
-## 🏃 Method 1: The New Python Backend
+## 🏃 Method 1: The High-Performance Rust Backend
 
-You can run the new Python backend seamlessly. Since the API contracts match, the frontend won't know the difference!
+### 1. Start the Rust Backend API
+In your first terminal, use `cargo` to run the Rust server:
+```bash
+cd backend-rust
+cargo run
+```
+*(The backend API runs on `http://localhost:8080`)*
+
+---
+
+## 🏃 Method 2: The Fast Python Backend
+
+You can also run the Python backend seamlessly. Since the API contracts match, the frontend won't know the difference!
 
 ### 1. Start the Python Backend API
-In your first terminal, use `uv` to instantly resolve dependencies and run the server:
+In your first terminal:
 ```bash
 cd backend-python
 uv run uvicorn main:app --port 8080
@@ -67,7 +80,7 @@ The frontend will work perfectly by talking to the mock server!
 
 ---
 
-## 🏃 Method 2: The Legacy Kotlin Backend
+## 🏃 Method 4: The Legacy Kotlin Backend
 
 If you prefer to run the Spring Boot Kotlin backend, you can!
 
@@ -123,6 +136,7 @@ v3.1-inventory-frontend-vite-react
 v3.2-inventory-frontend-vue
 v3.3-inventory-frontend-solidjs
 v4-inventory-python-solidjs
+v5-inventory-rust-solidjs
 ```
 
 ### Step 2: Travel back in time
@@ -153,6 +167,11 @@ git checkout main
 ---
 
 ## 🐳 Running with Docker
+
+To run the frontend coupled to the **Rust Axum** backend:
+```bash
+docker compose --profile rust up --build
+```
 
 To run the frontend coupled to the **Python FastAPI** backend:
 ```bash

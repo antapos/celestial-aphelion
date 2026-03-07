@@ -21,6 +21,16 @@ services:
         aliases:
           - backend
 
+  backend-rust:
+    build: ./backend-rust
+    profiles: ["rust"]
+    expose:
+      - "8080"
+    networks:
+      default:
+        aliases:
+          - backend
+
   frontend:
     build: ./frontend
     ports:
