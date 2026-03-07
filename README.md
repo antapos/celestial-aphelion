@@ -103,13 +103,26 @@ Once started, open your browser to `http://localhost:8080`.
 
 ## 🛡️ Running the Safety Net (E2E Tests)
 
-To prove that both backends are functionally identical, start either backend locally on port `8080` as described above, and then run the test suite in another terminal:
+To prove that all backends are functionally identical, start any backend locally on port `8080`, and then run the test suite in another terminal:
 
 ```bash
 cd e2e-tests
 uv run pytest test_api.py -v
 ```
 You should see all tests pass with flying colors, proving contract parity!
+
+---
+
+## 🏎️ Performance Benchmarks
+We ran an identical `10-second` load test (`100` concurrent connections) against each implementation.
+
+| Backend Implementation | Memory at Rest | Requests per Second (RPS) | Avg Latency | P99 Latency |
+| :--- | :--- | :--- | :--- | :--- |
+| **Kotlin (Spring Boot)** | `~239 MB` | `4,366 req/s` | `22.91 ms` | `98.89 ms` |
+| **Python (FastAPI)** | `~38 MB` | `1,641 req/s` | `61.05 ms` | `94.85 ms` |
+| **Rust (Axum)** | `~1.6 MB` | `53,365 req/s` | `1.86 ms` | `17.45 ms` |
+
+*The Rust backend achieves **12x more throughput** than Kotlin, while using **140x less memory**!*
 
 ---
 
